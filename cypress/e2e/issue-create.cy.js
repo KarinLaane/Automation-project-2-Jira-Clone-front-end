@@ -122,7 +122,7 @@ describe("Issue create", () => {
       .should("be.visible");
   });
 
-  it.only("Test Case 2: Random Data Plugin Issue Creation", () => {
+  it("Test Case 2: Random Data Plugin Issue Creation", () => {
     //System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       //Validate that task is preselected
