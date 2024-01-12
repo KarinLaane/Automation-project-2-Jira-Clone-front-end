@@ -26,7 +26,7 @@ describe("Issue delete", () => {
     IssueModal.ensureIssueIsNotVisibleOnBoard(issueTitle);
   });
 
-  it.only("Should cancel deletion process successfully", () => {
+  it("Should cancel deletion process successfully", () => {
     // Click the Delete Issue button
     IssueModal.clickDeleteButton();
 

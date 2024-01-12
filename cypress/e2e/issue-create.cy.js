@@ -122,7 +122,7 @@ describe("Issue create", () => {
       .should("be.visible");
   });
 
-  it.only("Test Case 2: Random Data Plugin Issue Creation", () => {
+  it("Test Case 2: Random Data Plugin Issue Creation", () => {
     //System finds modal for creating issue and does next steps inside of it
     cy.get('[data-testid="modal:issue-create"]').within(() => {
       //Validate that task is preselected
@@ -193,5 +193,55 @@ describe("Issue create", () => {
         "This field is required"
       );
     });
+  });
+
+  // Bonus assignment: TASK 3 //
+
+  it("Should remove unnecessary spaces on the board view", () => {
+    const issueTitle = "Hello    World!"
+
+    //System finds modal for creating issue and does next steps inside of it
+    cy.get('[data-testid="modal:issue-create"]').within(() => {
+      //Validate that task is preselected
+      cy.get('[data-testid="select:type"]').contains("Task");
+
+      cy.get(".ql-editor").type(randomDescription);
+
+      //Type value to title input field
+      cy.get('input[name="title"]').type(issueTitle);
+
+      //Select Baby Yoda from reporter dropdown
+      cy.get('[data-testid="select:reporterId"]').click();
+      cy.get('[data-testid="select-option:Baby Yoda"]').click();
+
+      //Select priority "Highest"
+      cy.get('[data-testid="select:priority"]').click();
+      cy.get('[data-testid="select-option:Low"]').trigger("click");
+
+      //Click on button "Create issue"
+      cy.get('button[type="submit"]').click();
+    });
+
+    //Assert that modal window is closed and successful message is visible
+    cy.get('[data-testid="modal:issue-create"]').should("not.exist");
+    cy.contains("Issue has been successfully created.").should("be.visible");
+
+    //Reload the page to be able to see recently created issue
+    //Assert that successful message has dissappeared after the reload
+    cy.reload();
+    cy.contains("Issue has been successfully created.").should("not.exist");
+
+    //Assert than only one list with name Backlog is visible and do steps inside of it
+    cy.get('[data-testid="board-list:backlog')
+      .should("be.visible")
+      .and("have.length", "1")
+      .within(() => {
+        //Assert that this list contains 5 issues and first one is issue we created
+        cy.get('[data-testid="list-issue"]')
+          .should("have.length", "5")
+          .first()
+          .find("p")
+          .should("contain", issueTitle.trim());
+      });
   });
 });
